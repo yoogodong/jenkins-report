@@ -10,7 +10,8 @@ public class Utils {
 
 
 
-    public static String formatTimestamp(long timestamp){
+    public static String formatTimestamp(Long timestamp){
+        if (timestamp==null) return "无";
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(timestamp));
     }
 
