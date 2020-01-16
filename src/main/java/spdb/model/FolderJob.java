@@ -1,7 +1,6 @@
-package model;
+package spdb.model;
 
 import lombok.extern.slf4j.Slf4j;
-import utils.Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +12,6 @@ public class FolderJob extends Job {
 
     public FolderJob(Map<String, String> desc) {
         super(desc);
-        log.info("请求:{}", url);
         List<Map> jobs_desc = jsonPath.getList("jobs", Map.class);
         jobs_desc.forEach(job_desc -> {
             String _class = (String) job_desc.get("_class");

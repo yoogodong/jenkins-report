@@ -1,10 +1,8 @@
-package model;
+package spdb.model;
 
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
-import utils.Const;
-import utils.Utils;
+import spdb.utils.Utils;
 
 @Data
 public class Build {

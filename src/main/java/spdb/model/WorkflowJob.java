@@ -1,13 +1,14 @@
-package model;
+package spdb.model;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import utils.Utils;
+import spdb.utils.Config;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -20,9 +21,14 @@ public class WorkflowJob extends Job {
 
     public WorkflowJob(Map<String, String> job_desc) {
         super(job_desc);
+        Config config = Config.instance();
         List<String> build_urls = jsonPath.getList("builds.url", String.class);
         build_urls.forEach(url -> builds.add(new Build(url)));
-        builds.sort(Comparator.comparingLong(b->b.getTimestamp()));
+        builds = build_urls.stream().map(url -> new Build(url))
+                .filter(build -> build.getTimestamp() >= config.getFrom())
+                .filter(build -> build.getTimestamp() <= config.getTo())
+                .collect(Collectors.toList());
+        builds.sort(Comparator.comparingLong(b -> b.getTimestamp()));
     }
 
     @Override

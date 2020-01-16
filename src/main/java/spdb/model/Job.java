@@ -1,10 +1,9 @@
-package model;
+package spdb.model;
 
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
-import utils.Utils;
+import spdb.utils.Utils;
 
-import java.util.Formatter;
 import java.util.Map;
 
 @Data
@@ -61,9 +60,9 @@ public abstract class Job {
      */
     public StringBuilder report() {
         StringBuilder doc = new StringBuilder("\n");
-        doc.append(name).append(">>");
+        doc.append(name).append(">>\n");
         if (buildCount()==0)
-            return doc.append("从未构建");
+            return doc.append("\t从未构建");
         doc.append("\t最早的构建开始于:").append(Utils.formatTimestamp(earliest()));
         doc.append("\t最后的构建结束于:").append(Utils.formatTimestamp(last()));
         int sum = buildCount();
