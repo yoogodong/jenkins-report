@@ -33,12 +33,33 @@ public abstract class Job {
         if (earliest() == null) return 0f;
         int millisPerDay = 1000 * 60 * 60 * 24;
         long timeSpan = last() - earliest();
-        float days = timeSpan / (float)millisPerDay;
+        float days = timeSpan / (float) millisPerDay;
         return buildCount() / days;
     }
 
+    /**
+     * 构建时长总和
+     */
+    public abstract Long buildDurationSum();
+
+    /**
+     * 成功构建的平均构建时长
+     */
+    public float meanBuildTimeInMinutes() {
+        float million = successBuildDurationSum() / successBuildCount();
+        return million / 1000 / 60;
+    }
+
+    public abstract Long successBuildDurationSum();
+
+    /**
+     * 成功构建的数量
+     */
     public abstract int successBuildCount();
 
+    /**
+     * 失败构建的数量
+     */
     public abstract int failureBuildCount();
 
     /**
@@ -61,17 +82,18 @@ public abstract class Job {
     public StringBuilder report() {
         StringBuilder doc = new StringBuilder("\n");
         doc.append(name).append(">>\n");
-        if (buildCount()==0)
+        if (buildCount() == 0)
             return doc.append("\t从未构建");
         doc.append("\t最早的构建开始于:").append(Utils.formatTimestamp(earliest()));
         doc.append("\t最后的构建结束于:").append(Utils.formatTimestamp(last()));
-        int sum = buildCount();
-        doc.append("\t构建次数:").append(sum);
+        int buildCount = buildCount();
+        doc.append("\t构建次数:").append(buildCount);
         doc.append("\t平均构建频率:").append(buildPerDay()).append("次/天");
+        doc.append("\t平均构建时长:").append(meanBuildTimeInMinutes()).append("分钟");
         int suc = successBuildCount();
         doc.append("\t成功次数:").append(suc);
         doc.append("\t失败次数:").append(failureBuildCount());
-        doc.append("\t成功率:").append(100 * suc / (float) sum).append("%");
+        doc.append("\t成功率:").append(100 * suc / (float) buildCount).append("%");
         return doc;
     }
 }

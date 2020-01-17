@@ -56,6 +56,7 @@
     </dependencies>
 
     <build>
+        <finalName>reporter</finalName>
         <plugins>
             <!-- any other plugins -->
             <plugin>

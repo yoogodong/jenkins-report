@@ -23,15 +23,15 @@ public class Build {
     }
 
     public boolean isSuccess(){
-        return result.equals("SUCCESS");
+        return result != null && result.equals("SUCCESS");
     }
 
     public boolean isFailure(){
-        return result.equals("FAILURE");
+        return result != null && result.equals("FAILURE");
     }
 
     public boolean isAborted(){
-        return result.equals("ABORTED");
+        return result != null && result.equals("ABORTED");
     }
 
 

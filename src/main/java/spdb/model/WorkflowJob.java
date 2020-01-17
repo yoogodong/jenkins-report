@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
 @ToString
 @Slf4j
 public class WorkflowJob extends Job {
+    private final List<Build> failureBuilds;
     private List<Build> builds = new ArrayList<>();
+    private final List<Build> successBuilds;
+
 
     public WorkflowJob(Map<String, String> job_desc) {
         super(job_desc);
@@ -29,21 +32,40 @@ public class WorkflowJob extends Job {
                 .filter(build -> build.getTimestamp() <= config.getTo())
                 .collect(Collectors.toList());
         builds.sort(Comparator.comparingLong(b -> b.getTimestamp()));
+        successBuilds = builds.stream().filter(build -> build.isSuccess()).collect(Collectors.toList());
+        failureBuilds = builds.stream().filter(build -> build.isFailure()).collect(Collectors.toList());
     }
 
+    /**
+     * 当前 job 下的构建次数
+     */
     @Override
     public int buildCount() {
         return builds.size();
     }
 
     @Override
-    public int successBuildCount(){
-        return (int) builds.stream().filter(build -> build.isSuccess()).count();
+    public Long buildDurationSum() {
+        return builds.stream().map(Build::getDuration).reduce(0L, Long::sum);
+    }
+
+    /**
+     * 成功构建总时长
+     */
+    @Override
+    public Long successBuildDurationSum() {
+        return successBuilds.stream().map(Build::getDuration).reduce(0L, Long::sum);
+    }
+
+
+    @Override
+    public int successBuildCount() {
+        return successBuilds.size();
     }
 
     @Override
-    public int failureBuildCount(){
-        return (int) builds.stream().filter(build -> build.isFailure()).count();
+    public int failureBuildCount() {
+        return failureBuilds.size();
     }
 
 

@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -65,8 +66,10 @@ public class Config {
 
     @SneakyThrows
     public Long getTo() {
-        String to = properties.getProperty("to");
-        return parseTime(to);
+        Long to = parseTime(properties.getProperty("to"));
+        if (to == 0L)
+            to = new Date().getTime();
+        return to;
     }
 
     @SneakyThrows
@@ -111,7 +114,7 @@ public class Config {
 
     private Long parseTime(String from) throws ParseException {
         DateFormat format = DATE_FORMAT;
-        if (from == null) {
+        if (from == null || from.length() == 0) {
             return 0L;
         } else if (from.contains(":")) {
             format = DATE_TIME_FORMAT;

@@ -11,12 +11,18 @@
   1. 添加新的类继承 job 
   2. 添加创建新 job 对象的逻辑分支到 FolderJob 的构造方法
   
+ # 打包
+ mvn clean package
   
   
  ## 运行
- java -jar -Durl=http://host/ -Duser=Alex -Dpassword=123 -Dfrom="2019-9-10 13:00:00" -Dto="2020-1-8 10:00:00" App.jar
+ java -jar -Durl=http://host/ -Duser=Alex -Dpassword=123 -Dfrom="2019-9-10 13:00:00" -Dto=2020-1-8 App.jar
  
 java -jar -Dpassword=yoogodong -Dfrom='2019-12-30 00:00:00'  App.jar 
   
+  
+ ## 几个指标的算法
+- 平均构建时间： 成功的构建总时长/成功构建次数， 构建时长包含需要人输入的等待时间
+- 
  
 

@@ -26,17 +26,27 @@ public class FolderJob extends Job {
 
     @Override
     public int buildCount() {
-        return jobs.stream().map(Job::buildCount).reduce(0,Integer::sum);
+        return jobs.stream().map(Job::buildCount).reduce(0, Integer::sum);
+    }
+
+    @Override
+    public Long buildDurationSum() {
+        return jobs.stream().map(Job::buildDurationSum).reduce(0L, Long::sum);
+    }
+
+    @Override
+    public Long successBuildDurationSum() {
+        return jobs.stream().map(Job::successBuildDurationSum).reduce(0L, Long::sum);
     }
 
     @Override
     public int successBuildCount() {
-        return jobs.stream().map(Job::successBuildCount).reduce(0,Integer::sum);
+        return jobs.stream().map(Job::successBuildCount).reduce(0, Integer::sum);
     }
 
     @Override
     public int failureBuildCount() {
-        return jobs.stream().map(Job::failureBuildCount).reduce(0,Integer::sum);
+        return jobs.stream().map(Job::failureBuildCount).reduce(0, Integer::sum);
     }
 
 
