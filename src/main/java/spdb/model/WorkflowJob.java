@@ -18,8 +18,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WorkflowJob extends Job {
     private final List<Build> failureBuilds;
-    private List<Build> builds = new ArrayList<>();
     private final List<Build> successBuilds;
+    private final BuildFailurePeriodList buildFailurePeriodList = new BuildFailurePeriodList();
+    private List<Build> builds = new ArrayList<>();
 
 
     public WorkflowJob(Map<String, String> job_desc) {
@@ -34,6 +35,23 @@ public class WorkflowJob extends Job {
         builds.sort(Comparator.comparingLong(b -> b.getTimestamp()));
         successBuilds = builds.stream().filter(build -> build.isSuccess()).collect(Collectors.toList());
         failureBuilds = builds.stream().filter(build -> build.isFailure()).collect(Collectors.toList());
+        builds.forEach(build -> buildFailurePeriodList.assessBuild(build));
+    }
+
+    /**
+     * 故障周期总时长
+     */
+    @Override
+    public Long failurePeriodDurationSum() {
+        return buildFailurePeriodList.sumDuration();
+    }
+
+    /**
+     * 故障周期次数
+     */
+    @Override
+    public int failurePeriodSize() {
+        return buildFailurePeriodList.size();
     }
 
     /**
@@ -44,9 +62,12 @@ public class WorkflowJob extends Job {
         return builds.size();
     }
 
+    /**
+     * 构建时长总和
+     */
     @Override
     public Long buildDurationSum() {
-        return builds.stream().map(Build::getDuration).reduce(0L, Long::sum);
+        return builds.stream().map(Build::getDuration).reduce(Long::sum).orElse(0L);
     }
 
     /**
@@ -54,21 +75,23 @@ public class WorkflowJob extends Job {
      */
     @Override
     public Long successBuildDurationSum() {
-        return successBuilds.stream().map(Build::getDuration).reduce(0L, Long::sum);
+        return successBuilds.stream().map(Build::getDuration).reduce(Long::sum).orElse(0L);
     }
 
-
+    /**成功构建次数*/
     @Override
     public int successBuildCount() {
         return successBuilds.size();
     }
 
+    /**失败构建次数*/
     @Override
     public int failureBuildCount() {
         return failureBuilds.size();
     }
 
 
+    /**最早的构建时间点*/
     @Override
     public Long earliest() {
         if (buildCount() == 0) {

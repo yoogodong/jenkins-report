@@ -58,16 +58,22 @@ public class Config {
         return properties.getProperty("password");
     }
 
+    /**
+     * 如果没有配置起始时间,则起始时间为0
+     */
     @SneakyThrows
     public Long getFrom() {
-        String from = properties.getProperty("from");
-        return parseTime(from);
+        Long from = parseTime(properties.getProperty("from"));
+        if (from == null)
+            from = 0L;
+        return from;
     }
 
+    /**如果没有配置截止时间,则设置为当前时间*/
     @SneakyThrows
     public Long getTo() {
         Long to = parseTime(properties.getProperty("to"));
-        if (to == 0L)
+        if (to == null)
             to = new Date().getTime();
         return to;
     }
@@ -115,7 +121,7 @@ public class Config {
     private Long parseTime(String from) throws ParseException {
         DateFormat format = DATE_FORMAT;
         if (from == null || from.length() == 0) {
-            return 0L;
+            return null;
         } else if (from.contains(":")) {
             format = DATE_TIME_FORMAT;
         }

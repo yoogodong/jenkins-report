@@ -24,11 +24,6 @@ public abstract class Job {
     }
 
 
-    /**
-     * 构建次数总和
-     */
-    public abstract int buildCount();
-
     public Float buildPerDay() {
         if (earliest() == null) return 0f;
         int millisPerDay = 1000 * 60 * 60 * 24;
@@ -36,6 +31,25 @@ public abstract class Job {
         float days = timeSpan / (float) millisPerDay;
         return buildCount() / days;
     }
+
+
+    public abstract Long failurePeriodDurationSum();
+
+    public abstract int failurePeriodSize();
+
+    /**
+     * 平均故障恢复时长
+     */
+    public float meanTimeToRecoveryInMinutes() {
+        if (failurePeriodDurationSum() == 0) return 0;
+        long meanTime = failurePeriodDurationSum() / failurePeriodSize();
+        return meanTime / 1000f / 60;
+    }
+
+    /**
+     * 构建次数总和
+     */
+    public abstract int buildCount();
 
     /**
      * 构建时长总和
@@ -94,6 +108,7 @@ public abstract class Job {
         doc.append("\t成功次数:").append(suc);
         doc.append("\t失败次数:").append(failureBuildCount());
         doc.append("\t成功率:").append(100 * suc / (float) buildCount).append("%");
+        doc.append("\t平均故障恢复时长:").append(meanTimeToRecoveryInMinutes()).append("分钟");
         return doc;
     }
 }
