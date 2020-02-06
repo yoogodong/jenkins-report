@@ -1,7 +1,7 @@
-生成 jenkins Report ， 会根据输入的jenkins 地址，遍历所有项目，并按项目、文件夹、整个服务器获得统计数据
-
-
-文件夹的统计数据是包括文件夹下的所有 job, 包括自文件夹下的job .
+## 原理
+- 本应用访问 jenkins 的 Rest API, 自动生成 jenkins Report。 
+- 需要输入的jenkins web url等参数，应用会遍历指定地址下所有项目，并按项目、文件夹、整个服务器获得统计数据
+- 文件夹的统计数据是包括文件夹下的所有 job, 包括自文件夹下的job .
 
   
  # 打包
@@ -11,8 +11,9 @@
  ## 运行
 java -jar -Durl=http://host/ -Duser=Alex -Dpassword=123 -Dfrom="2019-9-10 13:00:00" -Dto=2020-1-8 App.jar
  
-#### 如果需要认证，则：
-java -jar -Dpassword=yoogodong -Dfrom='2019-12-30 00:00:00'  App.jar 
+- 除了 url, 其他参数都不是必须的。 
+- 将命令配置在批处理文件中更方便。 
+
 
 注意：
 - App.jar 是最终打包的jar 文件名称；
